@@ -31,3 +31,62 @@ class BlogPostSchema(ma.Schema):
 
 blog_post_schema = BlogPostSchema()
 blog_posts_schema = BlogPostSchema(many=True)
+
+
+
+# Endpoint to create a new blog post
+@app.route('/blog', methods=["POST"])
+def add_blog():
+    title = request.json['title']
+    artist = request.json['artist']
+    genre = request.json['genre']
+    review = request.json['review']
+
+    new_blog = BlogPost(title, artist, genre, review)
+    db.session.add(new_blog)
+    db.session.commit()
+
+    blog_post = BlogPost.query.get(new_blog.id)
+
+    return blog_post_schema.jsonify(blog_post)
+
+
+
+# Endpoint to query all blog posts
+@app.route("/blogs", methods=["GET"])
+def get_blogs():
+    all_blogs = BlogPost.query.all()
+    result = blog_posts_schema.dump(all_blogs)
+    return jsonify(result)
+
+
+
+# Endpoint for single blog
+@app.route("/blog/<id>", methods=["GET"])
+def get_blog(id):
+    blog = BlogPost.query.get(id)
+    return blog_post_schema.jsonify(blog)
+
+
+
+# Endpoint to update a blog
+@app.route("/guide/<id>", methods=["PUT"])
+def blog_update(id):
+    blog = BlogPost.query.get(id)
+    title = request.json['title']
+    artist = request.json['artist']
+    genre = request.json['genre']
+    review = request.json['review']
+
+    blog.title = title
+    blog.artist = artist
+    blog.genre = genre
+    blog.review = review
+
+    db.session.commit()
+    return blog_post_schema.jsonify(blog)
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
