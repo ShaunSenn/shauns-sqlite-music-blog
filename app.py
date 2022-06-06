@@ -88,5 +88,14 @@ def blog_update(id):
 
 
 
+# Endpoint for deleting a record
+@app.route("/blog/<id>", methods=["DELETE"])
+def remove_blog(id):
+    blog = BlogPost.query.get(id)
+    db.session.delete(blog)
+    db.session.commit()
+
+    return blog_post_schema.jsonify(blog)
+
 if __name__ == '__main__':
     app.run(debug=True)
