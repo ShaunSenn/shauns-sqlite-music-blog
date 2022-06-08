@@ -51,7 +51,6 @@ def add_blog():
     return blog_post_schema.jsonify(blog_post)
 
 
-
 # Endpoint to query all blog posts
 @app.route("/blogs", methods=["GET"])
 def get_blogs():
@@ -60,32 +59,11 @@ def get_blogs():
     return jsonify(result)
 
 
-
 # Endpoint for single blog
 @app.route("/blog/<id>", methods=["GET"])
 def get_blog(id):
     blog = BlogPost.query.get(id)
     return blog_post_schema.jsonify(blog)
-
-
-
-# Endpoint to update a blog
-@app.route("/guide/<id>", methods=["PUT"])
-def blog_update(id):
-    blog = BlogPost.query.get(id)
-    title = request.json['title']
-    artist = request.json['artist']
-    genre = request.json['genre']
-    review = request.json['review']
-
-    blog.title = title
-    blog.artist = artist
-    blog.genre = genre
-    blog.review = review
-
-    db.session.commit()
-    return blog_post_schema.jsonify(blog)
-
 
 
 # Endpoint for deleting a record
